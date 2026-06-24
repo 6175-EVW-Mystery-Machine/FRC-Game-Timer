@@ -1,10 +1,11 @@
 # FRC REBUILT Timer
 
-An unofficial FRC match practice timer with scoreboard, audio visualizer, and music player. Built for players by players.
+An unofficial FRC practice timer with scoreboard, and music player.
 
 ## Setup
 
-To import match songs, click the music note button (bottom-right) -> open the admin panel (gear icon) -> click "Import MP3" in the Match Songs card.
+To import MATCH songs, click "Import MP3" in the Match Songs card.
+To import MUSIC PLAYER song, click the music icon in the bottom right -> click "Import Folder" -> choose the folder that has the songs you want.
 
 ## Timer Phases
 
