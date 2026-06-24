@@ -4,15 +4,15 @@ An unofficial FRC match practice timer with scoreboard, and music player.
 
 ## UI Layouts
 
-### Scoreboard (during match)
+### Main Page
 
 <img src="assets/MatchTimer.png" alt="Scoreboard with timer" width="700">
 
-### Mid-Match
+### Mid-Match Scoreboard
 
 <img src="assets/MidMatch.png" alt="Scoreboard mid-match" width="700">
 
-### Match Complete
+### Match End-Screen
 
 <img src="assets/MatchCompleted.png" alt="Match complete screen" width="700">
 
