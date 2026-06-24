@@ -32,6 +32,9 @@ To import MATCH songs, click "Import MP3" in the Match Songs card.
 
 To import MUSIC PLAYER songs, click the music icon in the bottom right -> click "Import Folder" -> choose your songs folder.
 
+I recommend using: https://github.com/sunnypatell/sunnify-spotify-downloader/releases to get your songs. (Make sure the playlist your downloading is public!)
+Make sure you have 'Add Metatags' checked for the music player to work correctly!
+
 ## Timer Phases
 
 | Phase | Duration | Color | Description |
