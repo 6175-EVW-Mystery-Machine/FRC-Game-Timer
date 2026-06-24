@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FRC REBUILT Timer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,800;0,900;1,900&family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Arena / Stadium Background Layer -->
+  <div class="arena-background" id="arena-bg">
+    <canvas id="visualizer-canvas"></canvas>
+    <div class="arena-grid"></div>
+    <div class="arena-lights"></div>
+  </div>
+
+  <!-- Scoreboard Component -->
+  <div class="scoreboard-wrapper" id="scoreboard-root">
+    <!-- Top Banner -->
+    <div class="top-banner">
+      <!-- Left: logo and text -->
+      <div class="banner-brand-left">
+        <!-- Stylized FIRST Logo (Triangle, Circle, Square) -->
+        <img class="svg-first-logo" src="FRC-Logo.png" alt="FRC Logo" />
+        <div class="first-text-group">
+          <div class="first-title">UN-OFFICIAL</div>
+          <div class="first-subtitle">PRACTICE TIMER</div>
+          <div class="first-sponsor">BUILT FOR PLAYERS BY THE PLAYERS</div>
+        </div>
+      </div>
+
+      <!-- Center: Match Information display -->
+      <div class="banner-match-info">
+        <span id="match-name-display" title="Click to edit match name"></span>
+        <span class="banner-match-sub" id="match-sub-display"></span>
+      </div>
+
+      <!-- Right: REBUILT event branding -->
+      <div class="banner-brand-right">
+        <div class="rebuilt-logo-container">
+          <div class="rebuilt-text">REBUILT</div>
+          <div class="rebuilt-sponsor">PRESENTED BY HAAS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scoreboard Row -->
+    <div class="scoreboard-row">
+      <!-- Alliance Switch Button -->
+      <button class="alliance-switch-btn" id="alliance-switch-btn" title="Switch Alliance Color" onclick="toggleAlliance()">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg>
+      </button>
+      <!-- Alliance Bar (details + score, flips as one unit) -->
+      <div class="alliance-bar" id="alliance-bar">
+        <div class="alliance-details blue" id="active-alliance-details">
+          <div class="alliance-name" id="active-alliance-name-display"></div>
+          <div class="team-list">
+            <div class="team-item">
+              <img id="team-avatar" class="team-avatar" src="" alt="" style="display:none">
+              <span class="team-number" id="active-team-number-display"></span>
+            </div>
+          </div>
+        </div>
+        <div class="score-box blue" id="active-score-display">0</div>
+      </div>
+
+      <!-- Center Timer Block -->
+      <div class="timer-panel" id="timer-box">
+        <div class="timer-progress" id="timer-bar" style="height: 100%;"></div>
+        <span class="timer-display" id="timer-val">0:20</span>
+        <span class="timer-phase-banner" id="phase-banner-val">AUTO START</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Collapsible Setup Control Panel -->
+  <div class="admin-panel" id="admin-panel">
+    <!-- Wrap all setup cards in setup-cards-grid -->
+    <div class="admin-section-grid" id="setup-cards-grid">
+      <!-- MATCH MUSIC SETUP -->
+      <div class="admin-card" id="music-setup-card">
+        <div class="card-title" style="font-size:12px; margin-bottom:10px; color:#b0b0b0;">Match Songs</div>
+        <div id="music-song-list" style="font-size:11px; margin-bottom:8px;"></div>
+        <input type="file" id="song-file-input" accept="audio/mp3,audio/mpeg" style="display:none">
+      </div>
+
+    </div>
+
+    <div class="bottom-section" style="display:flex;flex-direction:column;">
+      <div class="divider" id="admin-panel-divider" style="margin:2px 0;"></div>
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;" id="admin-controls-footer">
+        <div class="match-controls" id="match-action-row">
+          <button class="btn btn-primary" id="btn-start-match" onclick="toggleTimer()">Start Match</button>
+          <button class="btn btn-danger" onclick="resetMatch()">Reset Match</button>
+          <div class="highscore-badge" id="highscore-badge" style="margin-left:auto;">HIGH SCORE 0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="end-screen-overlay hidden" id="end-screen-overlay">
+    <div class="end-screen-panel">
+      <h2>Match Complete</h2>
+      <p>Scoring history for the match is shown below</p>
+      <div class="end-screen-content">
+        <div class="graph-area">
+          <canvas id="score-graph-canvas" width="800" height="260"></canvas>
+          <div id="graph-tooltip" class="graph-tooltip hidden"></div>
+        </div>
+        <div class="shift-table-container">
+          <h3>Shift Scoring Summary</h3>
+          <table id="shift-summary-table"></table>
+        </div>
+      </div>
+      <div class="end-screen-actions">
+        <button class="btn btn-success" onclick="openMusicPlayerAfterMatch()">Open Music Player</button>
+        <button class="btn btn-danger" onclick="resetMatch()">Reset Match</button>
+        <button class="btn btn-primary" onclick="closeEndScreen()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Music Player Button -->
+  <div class="admin-panel-toggle" id="admin-toggle" title="Music Player (M)">
+    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55C7.79 13 6 14.79 6 17s1.79 4 4 4 4-1.79 4-4V7h6V3h-6z"/>
+    </svg>
+  </div>
+
+  <!-- Music Player Wrapper (replaces scoreboard position) -->
+  <div class="music-player-wrapper" id="music-player-wrapper">
+    <!-- Top Banner (visible only in compact mode) -->
+    <div class="top-banner">
+      <div class="banner-match-info">
+        <div class="compact-track-info" id="compact-track-info">
+          <img id="compact-thumb-img" src="" alt="" style="display:none;width:48px;height:48px;border-radius:4px;object-fit:cover;flex-shrink:0;">
+          <svg class="compact-thumb-fallback" width="48" height="48" fill="currentColor" viewBox="0 0 24 24" opacity="0.35" style="flex-shrink:0;display:block;">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55C7.79 13 6 14.79 6 17s1.79 4 4 4 4-1.79 4-4V7h6V3h-6z"/>
+          </svg>
+          <div class="compact-track-text">
+            <span class="compact-track-name" id="compact-track-name">No track</span>
+            <span class="compact-track-artist" id="compact-track-artist"></span>
+          </div>
+        </div>
+      </div>
+      <div class="banner-brand-right">
+        <div class="compact-controls" id="compact-controls">
+          <button class="music-btn compact-btn" id="compact-prev-btn" title="Previous">
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+          </button>
+          <button class="music-btn compact-btn compact-play-btn" id="compact-play-btn" title="Play/Pause">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" id="compact-play-icon">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </button>
+          <button class="music-btn compact-btn" id="compact-next-btn" title="Next">
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+          </button>
+        </div>
+        <button class="btn btn-small" id="music-collapse-btn" title="Expand / Collapse" style="padding:3px 8px;font-size:11px;">▲</button>
+        <button class="btn btn-small btn-danger" id="music-close-btn" title="Close" style="padding:3px 8px;font-size:11px;margin-left:6px;">✕</button>
+      </div>
+    </div>
+
+    <div class="compact-progress" id="compact-progress"><div class="compact-progress-fill" id="compact-progress-fill"></div></div>
+
+    <!-- Music Content (visible only in full/expanded mode) -->
+    <div class="music-content-row">
+      <!-- Left: Now Playing + Controls -->
+      <div class="music-center-panel">
+        <div class="music-expanded-buttons" id="music-expanded-buttons">
+          <button class="btn btn-small" id="exp-collapse-btn" title="Collapse to compact view" style="padding:3px 10px;font-size:11px;">▲</button>
+          <button class="btn btn-small btn-danger" id="exp-close-btn" title="Close" style="padding:3px 10px;font-size:11px;margin-left:8px;">✕</button>
+        </div>
+        <div class="music-center-content">
+          <div class="music-track-info-block">
+            <div class="music-track-name-block" id="music-track-name-large">No track playing</div>
+            <div class="music-track-artist-block" id="music-track-artist-large">Import songs using the button below</div>
+          </div>
+
+          <div class="music-controls-block">
+            <button class="music-btn" id="music-prev-btn" title="Previous">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+            </button>
+            <button class="music-btn music-btn-play" id="music-play-btn" title="Play/Pause">
+              <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24" id="music-play-icon">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </button>
+            <button class="music-btn" id="music-next-btn" title="Next">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+            </button>
+          </div>
+
+          <div class="music-progress-block">
+            <input type="range" class="music-progress-bar" id="music-progress-bar" min="0" max="100" value="0">
+            <div class="music-time">
+              <span id="music-time-current">0:00</span>
+              <span id="music-time-total">0:00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Local Playlist -->
+      <div class="music-playlist-column">
+        <div class="admin-card" style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
+          <div class="card-title" style="font-size:12px;color:#b0b0b0;">Song Queue</div>
+          <div class="music-playlist" id="music-playlist" style="flex:1;overflow-y:auto;"></div>
+          <button class="btn btn-small" onclick="document.getElementById('folder-input').click()" style="margin-top:6px;width:100%;">📁 Import Folder</button>
+          <button class="btn btn-small btn-danger" onclick="clearAllSongs()" style="margin-top:4px;width:100%;">Clear All</button>
+          <input type="file" id="folder-input" webkitdirectory multiple accept="audio/*" style="display:none">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Match audio assets -->
+  <audio id="sound-start" src="./frc-start-sound.mp3" preload="auto"></audio>
+  <audio id="sound-resume" src="./frc-resume.mp3" preload="auto"></audio>
+  <audio id="sound-shift-change" src="./frc-shiftChange.mp3" preload="auto"></audio>
+  <audio id="sound-warning" src="./frc-warning.mp3" preload="auto"></audio>
+  <audio id="sound-end" src="./frc-end.mp3" preload="auto"></audio>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
