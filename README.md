@@ -96,13 +96,6 @@ Renders frequency-reactive bars and particles on the background canvas. Uses Web
 - **Blue alliance:** Deep blue
 - **Red alliance:** Dark red
 
-## Modes
-
-Add these classes to `<body>` for streaming/recording:
-
-- `mode-transparent` — Transparent background (hides arena, for OBS overlays)
-- `mode-chromakey` — Bright green background (for green screen compositing)
-
 ## Settings
 
 All settings are saved to `localStorage` under key `frc-scoreboard-settings`:
@@ -114,16 +107,3 @@ All settings are saved to `localStorage` under key `frc-scoreboard-settings`:
 - TBA API key
 
 Songs are stored in IndexedDB (`FRCTimerMusic`, v2) in two stores: `songs` (music player) and `matchSongs` (match playlist).
-
-## File Structure
-
-```
-index.html          — Main HTML (scoreboard, admin panel, music player)
-style.css           — All styles and animations
-script.js           — All logic (timer, scoring, audio, visualizer)
-server.js           — Optional local dev server (run: node server.js)
-FRC-Logo.png        — FIRST Robotics logo
-frc-*.mp3           — Event sound effects
-SONGS/              — Built-in match background music (14 tracks)
-Music Synthwave Bar Thingy/  — Standalone retro synthwave music player (reference)
-```
