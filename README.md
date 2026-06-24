@@ -1,11 +1,24 @@
 # FRC REBUILT Timer
 
-An unofficial FRC practice timer with scoreboard, and music player.
+An unofficial FRC match practice timer with scoreboard, and music player.
+
+## UI Layouts
+
+### Scoreboard (during match)
+
+<img src="assets/scoreboard.svg" alt="Scoreboard layout" width="700">
+
+### Admin Panel (setup view)
+
+<img src="assets/admin.svg" alt="Admin panel" width="700">
+
+### Music Player (expanded)
+
+<img src="assets/music-player.svg" alt="Music player" width="700">
 
 ## Setup
 
-To import MATCH songs, click "Import MP3" in the Match Songs card.
-To import MUSIC PLAYER songs, click the music icon in the bottom right -> click "Import Folder" -> choose the folder that has the songs you want.
+Open `index.html` in your browser. To import match songs, click the music note button (bottom-right) → open the admin panel → click "Import MP3" in the Match Songs card.
 
 ## Timer Phases
 
@@ -105,6 +118,5 @@ All settings are saved to `localStorage` under key `frc-scoreboard-settings`:
 - Alliance name and team number
 - Active alliance (blue/red)
 - High score
-- TBA API key
 
 Songs are stored in IndexedDB (`FRCTimerMusic`, v2) in two stores: `songs` (music player) and `matchSongs` (match playlist).
