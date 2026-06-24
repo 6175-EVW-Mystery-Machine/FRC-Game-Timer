@@ -5,7 +5,7 @@ An unofficial FRC practice timer with scoreboard, and music player.
 ## Setup
 
 To import MATCH songs, click "Import MP3" in the Match Songs card.
-To import MUSIC PLAYER song, click the music icon in the bottom right -> click "Import Folder" -> choose the folder that has the songs you want.
+To import MUSIC PLAYER songs, click the music icon in the bottom right -> click "Import Folder" -> choose the folder that has the songs you want.
 
 ## Timer Phases
 
