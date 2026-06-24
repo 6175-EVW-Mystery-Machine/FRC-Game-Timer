@@ -2,6 +2,8 @@
 
 An unofficial FRC match practice timer with scoreboard, and music player.
 
+This is not to be used during official matches, and is meant for practice when not at a competition. Understand that scoring is not automated and is done manually, so the score won't be 100% accurate.
+
 ## UI Layouts
 
 ### Main Page
